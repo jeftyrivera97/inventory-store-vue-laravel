@@ -11,6 +11,7 @@ use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProductoController extends Controller
 {
@@ -19,6 +20,9 @@ class ProductoController extends Controller
      */
     public function index(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
         $tableHeaders = array(
             1 => "Codigo Producto",
             2 => "Descripcion",
@@ -69,7 +73,6 @@ class ProductoController extends Controller
             $data = ProductoResource::collection(Producto::with(['proveedor', 'categoria'])->where('id_estado', 1)->paginate(50));
             return Inertia::render('producto/index', compact('data', 'contador', 'valor', 'tableHeaders', 'modulo'));
         }
-
     }
 
     /**
@@ -89,81 +92,94 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        $id_usuario = Auth::id();
-        $registro = now();
-        $impuestoSeleccionado = $request->id_impuesto;
-        $tipoImpuesto = Impuesto::find($impuestoSeleccionado);
-        $id_impuesto = $tipoImpuesto->id;
-        $valorImpuesto = $tipoImpuesto->valor;
-        $precioVenta = $request->precio_venta;
-        if ($id_impuesto == 1) {
-            $gravado15 = $precioVenta / $valorImpuesto;
-            $impuesto15 = $precioVenta - $gravado15;
-            $impuesto18 = 0;
-            $gravado18 = 0;
-            $exento = 0;
-            $exonerado = 0;
-        }
-        if ($id_impuesto == 2) {
-            $gravado18 = $precioVenta / $valorImpuesto;
-            $impuesto18 = $precioVenta - $gravado18;
-            $impuesto15 = 0;
-            $gravado15 = 0;
-            $exento = 0;
-            $exonerado = 0;
-        }
-        if ($id_impuesto == 3) {
-            $impuesto18 = 0;
-            $gravado18 = 0;
-            $impuesto15 = 0;
-            $gravado15 = 0;
-            $exento = $precioVenta;
-            $exonerado = 0;
-        }
-        if ($id_impuesto == 4) {
-            $impuesto18 = 0;
-            $gravado18 = 0;
-            $impuesto15 = 0;
-            $gravado15 = 0;
-            $exento = 0;
-            $exonerado = $precioVenta;
-        }
-        $stock = $request->stock;
-        $valor = $stock * $precioVenta;
-
-        $codigo = $request->codigo_producto;
-
-        if (Producto::where('codigo_producto', $codigo)->exists()) {
-            return redirect()->route('producto.index')->with('message', 'Producto NO guardado - Codigo de producto ya existe');
+        if (!Auth::check()) {
+            return redirect('/login');
         }
 
-        Producto::create([
-            'codigo_producto' => $request->codigo_producto,
-            'descripcion' => $request->descripcion,
-            'id_categoria' => $request->id_categoria,
-            'marca' => $request->marca,
-            'size' => $request->size,
-            'color' => $request->color,
-            'id_proveedor' => $request->id_proveedor,
-            'peso' => $request->peso,
-            'stock' => $request->stock,
-            'id_impuesto' => $request->id_impuesto,
-            'gravado15' => number_format((float)$gravado15, 2, '.', ''),
-            'gravado18' => number_format((float)$gravado18, 2, '.', ''),
-            'impuesto15' => number_format((float)$impuesto15, 2, '.', ''),
-            'impuesto18' => number_format((float)$impuesto18, 2, '.', ''),
-            'exento' => number_format((float)$exento, 2, '.', ''),
-            'exonerado' => number_format((float)$exonerado, 2, '.', ''),
-            'costo' => $request->costo,
-            'precio_venta' => $request->precio_venta,
-            'precio_web' => $request->precio_web,
-            'valor' => $request->valor,
-            'id_estado_web' => 1,
-            'id_estado' => 1,
-            'id_usuario' =>  $id_usuario,
-        ]);
+        try {
 
-        return redirect()->route('producto.index')->with('message', 'Producto agregado con exito');
+            $codigo = $request->codigo_producto;
+            if (Producto::where('codigo_producto', $codigo)->exists()) {
+                return redirect()->route('producto.index')->with('message', 'Producto NO guardado - Codigo de producto ya existe');
+            }
+
+            $id_usuario = Auth::id();
+            $registro = now();
+            $impuestoSeleccionado = $request->id_impuesto;
+            $tipoImpuesto = Impuesto::find($impuestoSeleccionado);
+            $id_impuesto = $tipoImpuesto->id;
+            $valorImpuesto = $tipoImpuesto->valor;
+            $precioVenta = $request->precio_venta;
+            if ($id_impuesto == 1) {
+                $gravado15 = $precioVenta / $valorImpuesto;
+                $impuesto15 = $precioVenta - $gravado15;
+                $impuesto18 = 0;
+                $gravado18 = 0;
+                $exento = 0;
+                $exonerado = 0;
+            }
+            if ($id_impuesto == 2) {
+                $gravado18 = $precioVenta / $valorImpuesto;
+                $impuesto18 = $precioVenta - $gravado18;
+                $impuesto15 = 0;
+                $gravado15 = 0;
+                $exento = 0;
+                $exonerado = 0;
+            }
+            if ($id_impuesto == 3) {
+                $impuesto18 = 0;
+                $gravado18 = 0;
+                $impuesto15 = 0;
+                $gravado15 = 0;
+                $exento = $precioVenta;
+                $exonerado = 0;
+            }
+            if ($id_impuesto == 4) {
+                $impuesto18 = 0;
+                $gravado18 = 0;
+                $impuesto15 = 0;
+                $gravado15 = 0;
+                $exento = 0;
+                $exonerado = $precioVenta;
+            }
+            $stock = $request->stock;
+            $valor = $stock * $precioVenta;
+
+
+
+
+
+            Producto::create([
+                'codigo_producto' => $request->codigo_producto,
+                'descripcion' => $request->descripcion,
+                'id_categoria' => $request->id_categoria,
+                'marca' => $request->marca,
+                'size' => $request->size,
+                'color' => $request->color,
+                'id_proveedor' => $request->id_proveedor,
+                'peso' => $request->peso,
+                'stock' => $request->stock,
+                'id_impuesto' => $request->id_impuesto,
+                'gravado15' => number_format((float)$gravado15, 2, '.', ''),
+                'gravado18' => number_format((float)$gravado18, 2, '.', ''),
+                'impuesto15' => number_format((float)$impuesto15, 2, '.', ''),
+                'impuesto18' => number_format((float)$impuesto18, 2, '.', ''),
+                'exento' => number_format((float)$exento, 2, '.', ''),
+                'exonerado' => number_format((float)$exonerado, 2, '.', ''),
+                'costo' => $request->costo,
+                'precio_venta' => $request->precio_venta,
+                'precio_web' => $request->precio_web,
+                'valor' => $request->valor,
+                'id_estado_web' => 1,
+                'id_estado' => 1,
+                'id_usuario' =>  $id_usuario,
+            ]);
+
+            return redirect()->route('producto.index')->with('message', 'Producto agregado con exito');
+        } catch (\Throwable $th) {
+            Log::error('Error guardando el producto: ' . $th->getMessage());
+            return redirect()->route('producto.index')->with('error', 'Error al guardar Producto: ' . $th->getMessage());
+        }
     }
 
     /**
@@ -189,83 +205,92 @@ class ProductoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $id_usuario = Auth::id();
-        $registro = now();
-        $impuestoSeleccionado = $request->id_impuesto;
-        $tipoImpuesto = Impuesto::find($impuestoSeleccionado);
-        $id_impuesto = $tipoImpuesto->id;
-        $valorImpuesto = $tipoImpuesto->valor;
-        $precioVenta = $request->precio_venta;
-        $categorias = $request->id_categoria;
-        $id_categoria = $categorias["id"];
-
-        if ($id_impuesto == 1) {
-            $gravado15 = $precioVenta / $valorImpuesto;
-            $impuesto15 = $precioVenta - $gravado15;
-            $impuesto18 = 0;
-            $gravado18 = 0;
-            $exento = 0;
-            $exonerado = 0;
+        if (!Auth::check()) {
+            return redirect('/login');
         }
 
-        if ($id_impuesto == 2) {
-            $gravado18 = $precioVenta / $valorImpuesto;
-            $impuesto18 = $precioVenta - $gravado18;
-            $impuesto15 = 0;
-            $gravado15 = 0;
-            $exento = 0;
-            $exonerado = 0;
+        try {
+            $id_usuario = Auth::id();
+            $registro = now();
+            $impuestoSeleccionado = $request->id_impuesto;
+            $tipoImpuesto = Impuesto::find($impuestoSeleccionado);
+            $id_impuesto = $tipoImpuesto->id;
+            $valorImpuesto = $tipoImpuesto->valor;
+            $precioVenta = $request->precio_venta;
+            $categorias = $request->id_categoria;
+            $id_categoria = $categorias["id"];
+
+            if ($id_impuesto == 1) {
+                $gravado15 = $precioVenta / $valorImpuesto;
+                $impuesto15 = $precioVenta - $gravado15;
+                $impuesto18 = 0;
+                $gravado18 = 0;
+                $exento = 0;
+                $exonerado = 0;
+            }
+
+            if ($id_impuesto == 2) {
+                $gravado18 = $precioVenta / $valorImpuesto;
+                $impuesto18 = $precioVenta - $gravado18;
+                $impuesto15 = 0;
+                $gravado15 = 0;
+                $exento = 0;
+                $exonerado = 0;
+            }
+
+            if ($id_impuesto == 3) {
+                $impuesto18 = 0;
+                $gravado18 = 0;
+                $impuesto15 = 0;
+                $gravado15 = 0;
+                $exento = $precioVenta;
+                $exonerado = 0;
+            }
+
+            if ($id_impuesto == 4) {
+                $impuesto18 = 0;
+                $gravado18 = 0;
+                $impuesto15 = 0;
+                $gravado15 = 0;
+                $exento = 0;
+                $exonerado = $precioVenta;
+            }
+
+            $stock = $request->stock;
+            $valor = $stock * $precioVenta;
+
+            $producto = Producto::findOrFail($id);
+            $producto->update([
+                'codigo_producto' => $request->codigo_producto,
+                'descripcion' => $request->descripcion,
+                'id_categoria' => $id_categoria,
+                'marca' => $request->marca,
+                'size' => $request->size,
+                'color' => $request->color,
+                'id_proveedor' => $request->id_proveedor,
+                'peso' => $request->peso,
+                'stock' => $request->stock,
+                'id_impuesto' => $request->id_impuesto,
+                'gravado15' => number_format((float)$gravado15, 2, '.', ''),
+                'gravado18' => number_format((float)$gravado18, 2, '.', ''),
+                'impuesto15' => number_format((float)$impuesto15, 2, '.', ''),
+                'impuesto18' => number_format((float)$impuesto18, 2, '.', ''),
+                'exento' => number_format((float)$exento, 2, '.', ''),
+                'exonerado' => number_format((float)$exonerado, 2, '.', ''),
+                'costo' => $request->costo,
+                'precio_venta' => $request->precio_venta,
+                'precio_web' => $request->precio_web,
+                'valor' => $request->valor,
+                'id_estado_web' => 1,
+                'id_estado' => 1,
+                'id_usuario' =>  $id_usuario,
+            ]);
+
+            return redirect()->route('producto.index')->with('message', 'Producto actualizado con exito');
+        } catch (\Throwable $th) {
+            Log::error('Error actualizar el producto: ' . $th->getMessage());
+            return redirect()->route('producto.index')->with('error', 'Error al actualizar Producto: ' . $th->getMessage());
         }
-
-        if ($id_impuesto == 3) {
-            $impuesto18 = 0;
-            $gravado18 = 0;
-            $impuesto15 = 0;
-            $gravado15 = 0;
-            $exento = $precioVenta;
-            $exonerado = 0;
-        }
-
-        if ($id_impuesto == 4) {
-            $impuesto18 = 0;
-            $gravado18 = 0;
-            $impuesto15 = 0;
-            $gravado15 = 0;
-            $exento = 0;
-            $exonerado = $precioVenta;
-        }
-
-        $stock = $request->stock;
-        $valor = $stock * $precioVenta;
-
-        $producto = Producto::findOrFail($id);
-        $producto->update([
-            'codigo_producto' => $request->codigo_producto,
-            'descripcion' => $request->descripcion,
-            'id_categoria' => $id_categoria,
-            'marca' => $request->marca,
-            'size' => $request->size,
-            'color' => $request->color,
-            'id_proveedor' => $request->id_proveedor,
-            'peso' => $request->peso,
-            'stock' => $request->stock,
-            'id_impuesto' => $request->id_impuesto,
-            'gravado15' => number_format((float)$gravado15, 2, '.', ''),
-            'gravado18' => number_format((float)$gravado18, 2, '.', ''),
-            'impuesto15' => number_format((float)$impuesto15, 2, '.', ''),
-            'impuesto18' => number_format((float)$impuesto18, 2, '.', ''),
-            'exento' => number_format((float)$exento, 2, '.', ''),
-            'exonerado' => number_format((float)$exonerado, 2, '.', ''),
-            'costo' => $request->costo,
-            'precio_venta' => $request->precio_venta,
-            'precio_web' => $request->precio_web,
-            'valor' => $request->valor,
-            'id_estado_web' => 1,
-            'id_estado' => 1,
-            'id_usuario' =>  $id_usuario,
-        ]);
-
-        return redirect()->route('producto.index')->with('message', 'Producto actualizado con exito');
     }
 
     /**

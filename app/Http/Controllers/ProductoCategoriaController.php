@@ -7,6 +7,7 @@ use App\Models\ProductoCategoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class ProductoCategoriaController extends Controller
 {
@@ -15,6 +16,9 @@ class ProductoCategoriaController extends Controller
      */
     public function index(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
         $tableHeaders = array(
             1 => "Descripcion",
         );
@@ -32,11 +36,11 @@ class ProductoCategoriaController extends Controller
                     ->paginate(50)
                     ->appends(['query' => $query])
             );
-            return Inertia::render('categoria/index', compact('data', 'contador', 'tableHeaders','modulo'));
+            return Inertia::render('categoria/index', compact('data', 'contador', 'tableHeaders', 'modulo'));
         } else {
 
-            $data = ProductoCategoriaResource::collection(ProductoCategoria::where('id_estado',1)->paginate(50));
-            return Inertia::render('categoria/index', compact('data', 'contador', 'tableHeaders','modulo'));
+            $data = ProductoCategoriaResource::collection(ProductoCategoria::where('id_estado', 1)->paginate(50));
+            return Inertia::render('categoria/index', compact('data', 'contador', 'tableHeaders', 'modulo'));
         }
     }
 
@@ -53,23 +57,32 @@ class ProductoCategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        $id_usuario= Auth::id();
-        $registro= now();
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
 
-        $descripcion= $request->descripcion;
+        try {
+            $id_usuario = Auth::id();
+            $registro = now();
 
-        if (ProductoCategoria::where('descripcion', $descripcion)->exists()) {
-            return redirect()->route('categoria.index')->with('message','Categoria NO guardada - Descripcion ya existe');
-         }
+            $descripcion = $request->descripcion;
 
-        ProductoCategoria::create([
-            'descripcion' => $request->descripcion,
-            'id_estado_web' => 1,
-            'id_estado' => 1,
-            'id_usuario' =>  $id_usuario,
-          ]);
+            if (ProductoCategoria::where('descripcion', $descripcion)->exists()) {
+                return redirect()->route('categoria.index')->with('message', 'Categoria NO guardada - Descripcion ya existe');
+            }
 
-          return redirect()->route('categoria.index')->with('message','Categoria agregada con exito');
+            ProductoCategoria::create([
+                'descripcion' => $request->descripcion,
+                'id_estado_web' => 1,
+                'id_estado' => 1,
+                'id_usuario' =>  $id_usuario,
+            ]);
+
+            return redirect()->route('categoria.index')->with('message', 'Categoria agregada con exito');
+        } catch (\Throwable $th) {
+            Log::error('Error guardando la categoria: ' . $th->getMessage());
+            return redirect()->route('categoria.index')->with('error', 'Error al guardar Categoria: ' . $th->getMessage());
+        }
     }
 
     /**
@@ -94,17 +107,25 @@ class ProductoCategoriaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $id_usuario= Auth::id();
-        $registro= now();
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
 
-        $categoria= ProductoCategoria::findOrFail($id);
-        $categoria-> update([
-            'descripcion' => $request->descripcion,
-            'id_usuario' =>  $id_usuario,
-          ]);
+        try {
+            $id_usuario = Auth::id();
+            $registro = now();
 
-          return redirect()->route('categoria.index')->with('message','Categoria actualizada con exito');
+            $categoria = ProductoCategoria::findOrFail($id);
+            $categoria->update([
+                'descripcion' => $request->descripcion,
+                'id_usuario' =>  $id_usuario,
+            ]);
 
+            return redirect()->route('categoria.index')->with('message', 'Categoria actualizada con exito');
+        } catch (\Throwable $th) {
+            Log::error('Error actualizando la categoria: ' . $th->getMessage());
+            return redirect()->route('categoria.index')->with('error', 'Error al actualizar Categoria: ' . $th->getMessage());
+        }
     }
 
     /**
@@ -113,12 +134,12 @@ class ProductoCategoriaController extends Controller
     public function destroy(string $id)
     {
         $categoria = ProductoCategoria::findOrFail($id);
-        $categoria-> id_estado =2;
+        $categoria->id_estado = 2;
         $categoria->save();
 
         $categoria = ProductoCategoria::findOrFail($id);
         $categoria->delete();
 
-        return redirect()->route('categoria.index')->with('message','Categoria eliminada con exito');
+        return redirect()->route('categoria.index')->with('message', 'Categoria eliminada con exito');
     }
 }
