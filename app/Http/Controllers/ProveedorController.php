@@ -37,6 +37,7 @@ class ProveedorController extends Controller
                           ->orWhere("contacto", "like", "$query%");
                     })
                     ->paginate(50)
+                    ->appends(['query' => $query])
             );
             return Inertia::render('proveedor/index', compact('data', 'contador', 'tableHeaders','modulo'));
         } else {

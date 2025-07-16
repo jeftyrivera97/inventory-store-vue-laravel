@@ -61,6 +61,7 @@ class ProductoController extends Controller
                             });
                     })
                     ->paginate(50)
+                    ->appends(['query' => $query])
             );
             return Inertia::render('producto/index', compact('data', 'contador', 'valor', 'tableHeaders', 'modulo'));
         } else {

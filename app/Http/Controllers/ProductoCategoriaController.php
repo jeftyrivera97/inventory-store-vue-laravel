@@ -30,6 +30,7 @@ class ProductoCategoriaController extends Controller
                 ProductoCategoria::where('id_estado', 1)
                     ->where("descripcion", "like", "$query%")
                     ->paginate(50)
+                    ->appends(['query' => $query])
             );
             return Inertia::render('categoria/index', compact('data', 'contador', 'tableHeaders','modulo'));
         } else {
