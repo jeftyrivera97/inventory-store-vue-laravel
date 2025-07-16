@@ -29,7 +29,15 @@ class ProveedorController extends Controller
 
         if ($request->has("query")) {
             $query =  $request->get("query");
-            $data = ProveedorResource::collection(Proveedor::where("descripcion", "like", "$query%")->orWhere("codigo_proveedor", "like", "$query%")->orWhere("contacto", "like", "$query%")->where('id_estado',1)->paginate(50));
+            $data = ProveedorResource::collection(
+                Proveedor::where('id_estado', 1)
+                    ->where(function($q) use ($query) {
+                        $q->where("descripcion", "like", "$query%")
+                          ->orWhere("codigo_proveedor", "like", "$query%")
+                          ->orWhere("contacto", "like", "$query%");
+                    })
+                    ->paginate(50)
+            );
             return Inertia::render('proveedor/index', compact('data', 'contador', 'tableHeaders','modulo'));
         } else {
 

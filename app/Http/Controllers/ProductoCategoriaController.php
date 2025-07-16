@@ -26,7 +26,11 @@ class ProductoCategoriaController extends Controller
 
         if ($request->has("query")) {
             $query =  $request->get("query");
-            $data = ProductoCategoriaResource::collection(ProductoCategoria::where("descripcion", "like", "$query%")->where('id_estado',1)->paginate(50));
+            $data = ProductoCategoriaResource::collection(
+                ProductoCategoria::where('id_estado', 1)
+                    ->where("descripcion", "like", "$query%")
+                    ->paginate(50)
+            );
             return Inertia::render('categoria/index', compact('data', 'contador', 'tableHeaders','modulo'));
         } else {
 

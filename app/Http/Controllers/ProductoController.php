@@ -44,21 +44,31 @@ class ProductoController extends Controller
 
         if ($request->has("query")) {
             $query =  $request->get("query");
-            $data = ProductoResource::collection(Producto::where("descripcion", "like", "$query%")->orWhere("codigo_producto", "like", "$query%")->orWhere("marca", "like", "$query%")->where('id_estado',1)->paginate(50));
-            return Inertia::render('producto/index', compact('data', 'contador', 'valor', 'tableHeaders','modulo'));
+            $data = ProductoResource::collection(
+                Producto::with(['proveedor', 'categoria'])
+                    ->where('id_estado', 1)
+                    ->where(function ($q) use ($query) {
+                        $q->where("descripcion", "like", "$query%")
+                            ->orWhere("codigo_producto", "like", "$query%")
+                            ->orWhere("marca", "like", "$query%")
+                            ->orWhere("color", "like", "$query%")
+                            ->orWhere("size", "like", "$query%")
+                            ->orWhere("precio_venta", "like", "$query%")
+                            ->orWhereHas('proveedor', function ($subQuery) use ($query) {
+                                $subQuery->where('descripcion', 'like', "$query%");
+                            })->orWhereHas('categoria', function ($subQuery) use ($query) {
+                                $subQuery->where('descripcion', 'like', "$query%");
+                            });
+                    })
+                    ->paginate(50)
+            );
+            return Inertia::render('producto/index', compact('data', 'contador', 'valor', 'tableHeaders', 'modulo'));
         } else {
 
-            $data = ProductoResource::collection(Producto::where('id_estado',1)->paginate(50));
-            return Inertia::render('producto/index', compact('data', 'contador', 'valor', 'tableHeaders','modulo'));
+            $data = ProductoResource::collection(Producto::with(['proveedor', 'categoria'])->where('id_estado', 1)->paginate(50));
+            return Inertia::render('producto/index', compact('data', 'contador', 'valor', 'tableHeaders', 'modulo'));
         }
 
-        // return Inertia::render('producto/index', [
-        //      'data' => ProductoResource::collection(
-        //          Producto::paginate(50)
-        //      ),
-        //      'contador' => $contador,
-        //      'valorInventario' => $valorInventario,
-        //  ]);
     }
 
     /**
@@ -66,11 +76,11 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        $impuestos = Impuesto::where('id_estado',1)->get();
-        $categorias = ProductoCategoria::where('id_estado',1)->get();
-        $proveedores = Proveedor::where('id_estado',1)->get();
+        $impuestos = Impuesto::where('id_estado', 1)->get();
+        $categorias = ProductoCategoria::where('id_estado', 1)->get();
+        $proveedores = Proveedor::where('id_estado', 1)->get();
 
-        return Inertia::render('producto/create', compact('impuestos', 'categorias','proveedores'));
+        return Inertia::render('producto/create', compact('impuestos', 'categorias', 'proveedores'));
     }
 
     /**
@@ -78,62 +88,62 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        $id_usuario= Auth::id();
-        $registro= now();
+        $id_usuario = Auth::id();
+        $registro = now();
         $impuestoSeleccionado = $request->id_impuesto;
-        $tipoImpuesto= Impuesto::find($impuestoSeleccionado);
+        $tipoImpuesto = Impuesto::find($impuestoSeleccionado);
         $id_impuesto = $tipoImpuesto->id;
-        $valorImpuesto=$tipoImpuesto->valor;
+        $valorImpuesto = $tipoImpuesto->valor;
         $precioVenta = $request->precio_venta;
-        if($id_impuesto==1){
-            $gravado15= $precioVenta/$valorImpuesto;
-            $impuesto15= $precioVenta-$gravado15;
-            $impuesto18=0;
-            $gravado18=0;
-            $exento=0;
-            $exonerado=0;
+        if ($id_impuesto == 1) {
+            $gravado15 = $precioVenta / $valorImpuesto;
+            $impuesto15 = $precioVenta - $gravado15;
+            $impuesto18 = 0;
+            $gravado18 = 0;
+            $exento = 0;
+            $exonerado = 0;
         }
-        if($id_impuesto==2){
-            $gravado18= $precioVenta/$valorImpuesto;
-            $impuesto18= $precioVenta-$gravado18;
-            $impuesto15=0;
-            $gravado15=0;
-            $exento=0;
-            $exonerado=0;
+        if ($id_impuesto == 2) {
+            $gravado18 = $precioVenta / $valorImpuesto;
+            $impuesto18 = $precioVenta - $gravado18;
+            $impuesto15 = 0;
+            $gravado15 = 0;
+            $exento = 0;
+            $exonerado = 0;
         }
-        if($id_impuesto==3){
-            $impuesto18= 0;
-            $gravado18= 0;
-            $impuesto15=0;
-            $gravado15=0;
-            $exento=$precioVenta;
-            $exonerado=0;
+        if ($id_impuesto == 3) {
+            $impuesto18 = 0;
+            $gravado18 = 0;
+            $impuesto15 = 0;
+            $gravado15 = 0;
+            $exento = $precioVenta;
+            $exonerado = 0;
         }
-        if($id_impuesto==4){
-            $impuesto18= 0;
-            $gravado18= 0;
-            $impuesto15=0;
-            $gravado15=0;
-            $exento=0;
-            $exonerado=$precioVenta;
+        if ($id_impuesto == 4) {
+            $impuesto18 = 0;
+            $gravado18 = 0;
+            $impuesto15 = 0;
+            $gravado15 = 0;
+            $exento = 0;
+            $exonerado = $precioVenta;
         }
         $stock = $request->stock;
-        $valor= $stock*$precioVenta;
+        $valor = $stock * $precioVenta;
 
-        $codigo= $request->codigo_producto;
+        $codigo = $request->codigo_producto;
 
         if (Producto::where('codigo_producto', $codigo)->exists()) {
-            return redirect()->route('producto.index')->with('message','Producto NO guardado - Codigo de producto ya existe');
-         }
+            return redirect()->route('producto.index')->with('message', 'Producto NO guardado - Codigo de producto ya existe');
+        }
 
         Producto::create([
             'codigo_producto' => $request->codigo_producto,
             'descripcion' => $request->descripcion,
-            'id_categoria' =>$request->id_categoria,
-            'marca' =>$request->marca,
+            'id_categoria' => $request->id_categoria,
+            'marca' => $request->marca,
             'size' => $request->size,
             'color' => $request->color,
-            'id_proveedor' =>$request->id_proveedor,
+            'id_proveedor' => $request->id_proveedor,
             'peso' => $request->peso,
             'stock' => $request->stock,
             'id_impuesto' => $request->id_impuesto,
@@ -150,31 +160,27 @@ class ProductoController extends Controller
             'id_estado_web' => 1,
             'id_estado' => 1,
             'id_usuario' =>  $id_usuario,
-          ]);
+        ]);
 
-          return redirect()->route('producto.index')->with('message','Producto agregado con exito');
-
+        return redirect()->route('producto.index')->with('message', 'Producto agregado con exito');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        $impuestos = Impuesto::where('id_estado',1)->get();
-        $categorias = ProductoCategoria::where('id_estado',1)->get();
-        $proveedores = Proveedor::where('id_estado',1)->get();
+        $impuestos = Impuesto::where('id_estado', 1)->get();
+        $categorias = ProductoCategoria::where('id_estado', 1)->get();
+        $proveedores = Proveedor::where('id_estado', 1)->get();
         $data = Producto::findOrFail($id);
 
-        return Inertia::render('producto/edit', compact('impuestos', 'categorias','proveedores','data'));
+        return Inertia::render('producto/edit', compact('impuestos', 'categorias', 'proveedores', 'data'));
     }
 
     /**
@@ -182,64 +188,64 @@ class ProductoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $id_usuario= Auth::id();
-        $registro= now();
+        $id_usuario = Auth::id();
+        $registro = now();
         $impuestoSeleccionado = $request->id_impuesto;
-        $tipoImpuesto= Impuesto::find($impuestoSeleccionado);
+        $tipoImpuesto = Impuesto::find($impuestoSeleccionado);
         $id_impuesto = $tipoImpuesto->id;
-        $valorImpuesto=$tipoImpuesto->valor;
+        $valorImpuesto = $tipoImpuesto->valor;
         $precioVenta = $request->precio_venta;
-        $categorias =$request->id_categoria;
+        $categorias = $request->id_categoria;
         $id_categoria = $categorias["id"];
 
-        if($id_impuesto==1){
-            $gravado15= $precioVenta/$valorImpuesto;
-            $impuesto15= $precioVenta-$gravado15;
-            $impuesto18=0;
-            $gravado18=0;
-            $exento=0;
-            $exonerado=0;
+        if ($id_impuesto == 1) {
+            $gravado15 = $precioVenta / $valorImpuesto;
+            $impuesto15 = $precioVenta - $gravado15;
+            $impuesto18 = 0;
+            $gravado18 = 0;
+            $exento = 0;
+            $exonerado = 0;
         }
 
-        if($id_impuesto==2){
-            $gravado18= $precioVenta/$valorImpuesto;
-            $impuesto18= $precioVenta-$gravado18;
-            $impuesto15=0;
-            $gravado15=0;
-            $exento=0;
-            $exonerado=0;
+        if ($id_impuesto == 2) {
+            $gravado18 = $precioVenta / $valorImpuesto;
+            $impuesto18 = $precioVenta - $gravado18;
+            $impuesto15 = 0;
+            $gravado15 = 0;
+            $exento = 0;
+            $exonerado = 0;
         }
 
-        if($id_impuesto==3){
-            $impuesto18= 0;
-            $gravado18= 0;
-            $impuesto15=0;
-            $gravado15=0;
-            $exento=$precioVenta;
-            $exonerado=0;
+        if ($id_impuesto == 3) {
+            $impuesto18 = 0;
+            $gravado18 = 0;
+            $impuesto15 = 0;
+            $gravado15 = 0;
+            $exento = $precioVenta;
+            $exonerado = 0;
         }
 
-        if($id_impuesto==4){
-            $impuesto18= 0;
-            $gravado18= 0;
-            $impuesto15=0;
-            $gravado15=0;
-            $exento=0;
-            $exonerado=$precioVenta;
+        if ($id_impuesto == 4) {
+            $impuesto18 = 0;
+            $gravado18 = 0;
+            $impuesto15 = 0;
+            $gravado15 = 0;
+            $exento = 0;
+            $exonerado = $precioVenta;
         }
 
         $stock = $request->stock;
-        $valor= $stock*$precioVenta;
+        $valor = $stock * $precioVenta;
 
-        $producto= Producto::findOrFail($id);
-        $producto-> update([
+        $producto = Producto::findOrFail($id);
+        $producto->update([
             'codigo_producto' => $request->codigo_producto,
             'descripcion' => $request->descripcion,
-            'id_categoria' =>$id_categoria,
-            'marca' =>$request->marca,
+            'id_categoria' => $id_categoria,
+            'marca' => $request->marca,
             'size' => $request->size,
             'color' => $request->color,
-            'id_proveedor' =>$request->id_proveedor,
+            'id_proveedor' => $request->id_proveedor,
             'peso' => $request->peso,
             'stock' => $request->stock,
             'id_impuesto' => $request->id_impuesto,
@@ -256,9 +262,9 @@ class ProductoController extends Controller
             'id_estado_web' => 1,
             'id_estado' => 1,
             'id_usuario' =>  $id_usuario,
-          ]);
+        ]);
 
-          return redirect()->route('producto.index')->with('message','Producto actualizado con exito');
+        return redirect()->route('producto.index')->with('message', 'Producto actualizado con exito');
     }
 
     /**
@@ -267,11 +273,9 @@ class ProductoController extends Controller
     public function destroy(string $id)
     {
         $producto = Producto::findOrFail($id);
-        $producto ->id_estado =2;
+        $producto->id_estado = 2;
         $producto->save();
 
-        return redirect()->route('producto.index')->with('message','Producto eliminado con exito');
-
-
+        return redirect()->route('producto.index')->with('message', 'Producto eliminado con exito');
     }
 }
