@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('estado_web', function (Blueprint $table) {
+        Schema::create('estados_operaciones', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
             $table->softDeletes();
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('estado_web');
+        Schema::dropIfExists('estados_operaciones');
     }
 };

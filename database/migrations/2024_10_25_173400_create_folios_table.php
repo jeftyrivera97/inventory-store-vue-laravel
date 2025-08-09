@@ -18,7 +18,7 @@ return new class extends Migration
             $table->double('anterior');
             $table->double('actual');
             $table->double('proximo');
-            $table->foreignId('id_folio_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('folio_categorias');
+            $table->foreignId('id_folio_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_folios');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);

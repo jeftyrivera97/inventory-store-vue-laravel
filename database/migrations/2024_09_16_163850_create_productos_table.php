@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('codigo_producto');
             $table->string('descripcion');
-            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('producto_categorias');
+            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_productos');
             $table->string('marca');
             $table->string('size')->nullable();
             $table->string('color')->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->double('precio_venta');
             $table->double('precio_web')->nullable();
             $table->double('valor');
-            $table->foreignId('id_estado_web')->nullable()->nullOnDelete()->constrained()->references('id')->on('estado_web');
+            $table->foreignId('id_estado_online')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados_productos_online');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);

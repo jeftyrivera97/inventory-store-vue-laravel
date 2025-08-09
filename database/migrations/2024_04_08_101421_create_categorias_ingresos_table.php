@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('envio_costos', function (Blueprint $table) {
+        Schema::create('categorias_ingresos', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->string('medidas')->nullable();
-            $table->double('libras');
-            $table->double('costo');
-            $table->foreignId('id_tipo_envio')->nullable()->nullOnDelete()->constrained()->references('id')->on('envio_tipos');
-            $table->foreignId('id_empresa_envio')->nullable()->nullOnDelete()->constrained()->references('id')->on('envio_empresas');
+            $table->foreignId('id_tipo')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipos_ingresos');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('envio_costos');
+        Schema::dropIfExists('categorias_ingresos');
     }
 };

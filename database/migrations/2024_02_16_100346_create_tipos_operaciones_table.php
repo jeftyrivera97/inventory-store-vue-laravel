@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('producto_categorias', function (Blueprint $table) {
+        Schema::create('tipos_operaciones', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->string('nombre_imagen')->nullable();
-            $table->string('ruta_imagen')->nullable();
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
-            $table->foreignId('id_estado_web')->nullable()->nullOnDelete()->constrained()->references('id')->on('estado_web');
-            $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
-            $table->timestamps(precision: 0);
             $table->softDeletes();
         });
     }
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('producto_categorias');
+        Schema::dropIfExists('tipos_operaciones');
     }
 };

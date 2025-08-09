@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipo_cuentas', function (Blueprint $table) {
+        Schema::create('tipos_gastos', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
+            $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
+            $table->timestamps(precision: 0);
             $table->softDeletes();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipo_cuentas');
+        Schema::dropIfExists('tipos_gastos');
     }
 };

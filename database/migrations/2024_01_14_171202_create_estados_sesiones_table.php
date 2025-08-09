@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('compra_categorias', function (Blueprint $table) {
+        Schema::create('estados_sesiones', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->string('tipo');
-            $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
-            $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
-            $table->timestamps(precision: 0);
             $table->softDeletes();
 
         });
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('compra_categorias');
+        Schema::dropIfExists('estados_sesiones');
     }
 };

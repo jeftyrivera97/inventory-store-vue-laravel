@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ingreso_categorias', function (Blueprint $table) {
+        Schema::create('tipos_planillas', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->string('tipo');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ingreso_categorias');
+        Schema::dropIfExists('tipos_planillas');
     }
 };

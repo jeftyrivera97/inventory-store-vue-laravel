@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('codigo_empleado');
             $table->string('descripcion');
-            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('empleado_categorias');
+            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_empleados');
+            $table->foreignId('id_area')->nullable()->nullOnDelete()->constrained()->references('id')->on('areas_empleados');
             $table->string('telefono');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');

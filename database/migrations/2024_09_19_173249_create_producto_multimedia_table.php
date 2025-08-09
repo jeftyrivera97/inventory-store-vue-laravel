@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('id_producto')->nullable()->nullOnDelete()->constrained()->references('id')->on('productos');
             $table->string('nombre_imagen');
             $table->string('ruta_imagen');
-            $table->foreignId('id_estado_web')->nullable()->nullOnDelete()->constrained()->references('id')->on('estado_web');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);

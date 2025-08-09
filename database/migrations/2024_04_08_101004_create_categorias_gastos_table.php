@@ -11,24 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cajas', function (Blueprint $table) {
+        Schema::create('categorias_gastos', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->double('caja_inicial');
-            $table->double('caja_final');
-            $table->double('efectivo');
-            $table->double('pos');
-            $table->double('deposito');
-            $table->double('credito');
-            $table->foreignId('estado_caja')->nullable()->nullOnDelete()->constrained()->references('id')->on('estado_cajas');
-            $table->dateTimeTz('fecha');
-            $table->dateTimeTz('apertura');
-            $table->dateTimeTz('cierre');
+            $table->foreignId('id_tipo')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipos_gastos');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
             $table->softDeletes();
-
         });
     }
 
@@ -37,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cajas');
+        Schema::dropIfExists('categorias_gastos');
     }
 };

@@ -15,19 +15,19 @@ class PagoCategoriaSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('pago_categorias')->insert([
+        DB::table('metodos_pagos')->insert([
             'descripcion' => 'Efectivo',
             'id_estado' => '1',
         ]);
-        DB::table('pago_categorias')->insert([
-            'descripcion' => 'POS',
+        DB::table('metodos_pagos')->insert([
+            'descripcion' => 'POS Terminal',
             'id_estado' => '1',
         ]);
-        DB::table('pago_categorias')->insert([
+        DB::table('metodos_pagos')->insert([
             'descripcion' => 'Pago Link',
             'id_estado' => '1',
         ]);
-        DB::table('pago_categorias')->insert([
+        DB::table('metodos_pagos')->insert([
             'descripcion' => 'Deposito',
             'id_estado' => '1',
         ]);

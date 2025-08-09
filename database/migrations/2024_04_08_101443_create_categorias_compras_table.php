@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pago_categorias', function (Blueprint $table) {
+        Schema::create('categorias_compras', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
+            $table->foreignId('id_tipo')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipos_compras');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
+            $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
+            $table->timestamps(precision: 0);
             $table->softDeletes();
+
         });
     }
 
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pago_categorias');
+        Schema::dropIfExists('categorias_compras');
     }
 };

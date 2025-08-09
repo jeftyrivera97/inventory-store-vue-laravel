@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('envio_empresas', function (Blueprint $table) {
+        Schema::create('tipos_compras', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->string('telefono');
-            $table->foreignId('id_tipo_envio')->nullable()->nullOnDelete()->constrained()->references('id')->on('envio_tipos');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('envio_empresas');
+        Schema::dropIfExists('tipos_compras');
     }
 };

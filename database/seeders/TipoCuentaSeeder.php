@@ -15,10 +15,10 @@ class TipoCuentaSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('tipo_cuentas')->insert([
+        DB::table('tipos_operaciones')->insert([
             'descripcion' => 'Contado',
         ]);
-        DB::table('tipo_cuentas')->insert([
+        DB::table('tipos_operaciones')->insert([
             'descripcion' => 'Credito',
         ]);
     }

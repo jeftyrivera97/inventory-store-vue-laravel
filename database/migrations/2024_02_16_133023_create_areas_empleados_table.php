@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('folio_categorias', function (Blueprint $table) {
+        Schema::create('areas_empleados', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
+            $table->timestamps(precision: 0);
             $table->softDeletes();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('folio_categorias');
+        Schema::dropIfExists('areas_empleados');
     }
 };

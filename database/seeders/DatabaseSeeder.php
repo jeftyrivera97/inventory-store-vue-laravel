@@ -19,9 +19,6 @@ class DatabaseSeeder extends Seeder
             ImpuestoSeeder::class,
             EstadoWebSeeder::class,
             EmpresaSeeder::class,
-            PagoCategoriaSeeder::class,
-            EstadoCuentaSeeder::class,
-            TipoCuentaSeeder::class,
         ]);
     }
 }

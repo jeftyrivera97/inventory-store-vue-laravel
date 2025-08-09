@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('codigo_compra');
             $table->date('fecha');
-            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('compra_categorias');
+            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_compras');
             $table->foreignId('id_proveedor')->nullable()->nullOnDelete()->constrained()->references('id')->on('proveedores');
-            $table->foreignId('id_tipo_cuenta')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipo_cuentas');
-            $table->foreignId('id_estado_cuenta')->nullable()->nullOnDelete()->constrained()->references('id')->on('estado_cuentas');
+            $table->foreignId('id_tipo_operacion')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipos_operaciones');
+            $table->foreignId('id_estado_operacion')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados_operaciones');
             $table->date('fecha_pago')->nullable();
             $table->double('gravado15')->nullable();
             $table->double('gravado18')->nullable();

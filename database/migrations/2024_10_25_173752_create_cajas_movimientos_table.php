@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('envio_tipos', function (Blueprint $table) {
+        Schema::create('cajas_movimientos', function (Blueprint $table) {
             $table->id();
+            $table->dateTimeTz('fecha');
+            $table->foreignId('id_sesion')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas_sesiones');
+            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas_categorias_movimientos');
+            $table->double('monto');
             $table->string('descripcion');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('envio_tipos');
+        Schema::dropIfExists('cajas_movimientos');
     }
 };

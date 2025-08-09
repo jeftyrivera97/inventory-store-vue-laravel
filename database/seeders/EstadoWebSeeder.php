@@ -15,10 +15,10 @@ class EstadoWebSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('estado_web')->insert([
+        DB::table('estados_productos_online')->insert([
             'descripcion' => 'Habilitado',
         ]);
-        DB::table('estado_web')->insert([
+        DB::table('estados_productos_online')->insert([
             'descripcion' => 'No Habilitado',
         ]);
     }
