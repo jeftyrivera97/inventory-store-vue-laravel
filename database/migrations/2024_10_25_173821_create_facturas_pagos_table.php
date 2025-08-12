@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pagos_facturas', function (Blueprint $table) {
+        Schema::create('facturas_pagos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_factura')->nullable()->nullOnDelete()->constrained()->references('id')->on('facturas');
             $table->foreignId('id_metodo_pago')->nullable()->nullOnDelete()->constrained()->references('id')->on('metodos_pagos');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pagos_facturas');
+        Schema::dropIfExists('facturas_pagos');
     }
 };

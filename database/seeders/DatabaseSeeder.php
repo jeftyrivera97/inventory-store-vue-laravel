@@ -15,10 +15,22 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
+            EstadoOperacionesSeeder::class,
+            EstadoProductosOnlineSeeder::class,
+            EstadoSesionesSeeder::class,
+            EstadoFacturasSeeder::class,
             EstadoSeeder::class,
+
             ImpuestoSeeder::class,
-            EstadoWebSeeder::class,
             EmpresaSeeder::class,
+
+            TipoFacturasSeeder::class,
+            TipoOperacionesSeeder::class,
+
+            CajaCategoriasMovimientosSeeder::class,
+            CategoriaFacturasSeeder::class,
+            MetodosPagosSeeder::class,
+
         ]);
     }
 }

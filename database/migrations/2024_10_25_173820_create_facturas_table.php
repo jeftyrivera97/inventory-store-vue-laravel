@@ -25,8 +25,9 @@ return new class extends Migration
             $table->double('exento')->nullable();
             $table->double('exonerado')->nullable();
             $table->double('descuentos')->nullable();
+            $table->double('subtotal')->nullable();
             $table->double('total')->nullable();
-            $table->foreignId('id_folio')->nullable()->nullOnDelete()->constrained()->references('id')->on('folios');
+            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_facturas');
             $table->foreignId('id_tipo_factura')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipos_facturas');
             $table->foreignId('id_estado_factura')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados_facturas');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');

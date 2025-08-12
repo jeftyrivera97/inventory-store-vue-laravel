@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categorias_folios', function (Blueprint $table) {
+        Schema::create('facturas_folios', function (Blueprint $table) {
             $table->id();
-            $table->string('descripcion');
-            $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
-            $table->softDeletes();
+            $table->foreignId('id_factura')->nullable()->nullOnDelete()->constrained()->references('id')->on('facturas');
+            $table->foreignId('id_folio')->nullable()->nullOnDelete()->constrained()->references('id')->on('folios');
         });
     }
 
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categorias_folios');
+        Schema::dropIfExists('facturas_folios');
     }
 };

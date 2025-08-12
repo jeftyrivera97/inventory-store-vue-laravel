@@ -5,21 +5,19 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
-class TipoCuentaSeeder extends Seeder
+class EstadoSesionesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('tipos_operaciones')->insert([
-            'descripcion' => 'Contado',
+         DB::table('estados_sesiones')->insert([
+            'descripcion' => 'Abierta',
         ]);
-        DB::table('tipos_operaciones')->insert([
-            'descripcion' => 'Credito',
+        DB::table('estados_sesiones')->insert([
+            'descripcion' => 'Cerrada',
         ]);
     }
 }

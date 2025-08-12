@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('descripcion');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
+            $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
+            $table->timestamps(precision: 0);
             $table->softDeletes();
         });
     }

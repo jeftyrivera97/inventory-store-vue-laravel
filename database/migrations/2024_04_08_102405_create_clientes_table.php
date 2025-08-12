@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('codigo_cliente');
             $table->string('descripcion');
-            $table->string('telefono');
+            $table->string('direccion')->nullable();
+            $table->string('telefono')->nullable();
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
