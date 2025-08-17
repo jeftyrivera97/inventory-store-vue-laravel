@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cajas_categorias_movimientos', function (Blueprint $table) {
+        Schema::create('areas_empleados', function (Blueprint $table) {
             $table->id();
-            $table->string('categoria');
-            $table->string('medio');
+            $table->string('descripcion');
+            $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
+            $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
             $table->softDeletes();
         });
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cajas_categorias_movimientos');
+        Schema::dropIfExists('areas_empleados');
     }
 };

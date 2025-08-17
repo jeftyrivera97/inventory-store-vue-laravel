@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
             TipoFacturasSeeder::class,
             TipoOperacionesSeeder::class,
 
-            CajaCategoriasMovimientosSeeder::class,
+            CategoriaMovimientoSeeder::class,
+            MediosMovimientosSeeder::class,
             CategoriaFacturasSeeder::class,
             MetodosPagosSeeder::class,
 

@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('categorias_empleados', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->integer('rango');
+            $table->string('rango');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
+            $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
             $table->softDeletes();
         });

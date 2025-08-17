@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_caja')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas');
             $table->double('saldo_inicial');
-            $table->double('saldo_final');
+            $table->double('saldo_final')->nullable();
             $table->dateTimeTz('fecha_apertura');
-            $table->dateTimeTz('fecha_cierre');
+            $table->dateTimeTz('fecha_cierre')->nullable();
             $table->double('venta_efectivo');
-            $table->double('venta_pos');
-            $table->double('venta_deposito');
+            $table->double('venta_tarjeta');
+            $table->double('venta_transferencia');
+            $table->double('venta_pago_link');
+            $table->double('venta_cheque');
             $table->double('venta_credito');
             $table->foreignId('id_estado_sesion')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados_sesiones');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
