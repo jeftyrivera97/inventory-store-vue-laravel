@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('folios', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo');
+            $table->string('codigo_folio');
+            $table->string('descripcion')->nullable();
             $table->double('inicio');
             $table->double('final');
             $table->double('actual');

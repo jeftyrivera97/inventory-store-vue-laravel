@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('metodos_pagos', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
+            $table->foreignId('id_tipo_operacion')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipos_operaciones');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);

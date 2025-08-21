@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('cajas_sesiones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_caja')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas');
-            $table->double('saldo_inicial');
-            $table->double('saldo_final')->nullable();
+            $table->double('caja_efectivo_inicial');
+            $table->double('caja_efectivo_final')->nullable();
+            $table->double('diferencia')->nullable();
             $table->dateTimeTz('fecha_apertura');
             $table->dateTimeTz('fecha_cierre')->nullable();
             $table->double('venta_efectivo');
@@ -24,9 +25,11 @@ return new class extends Migration
             $table->double('venta_pago_link');
             $table->double('venta_cheque');
             $table->double('venta_credito');
+            $table->double('total_contado')->nullable();
             $table->foreignId('id_estado_sesion')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados_sesiones');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
+            $table->foreignId('id_usuario_auditor')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
             $table->softDeletes();
         });

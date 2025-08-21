@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->dateTimeTz('fecha');
             $table->double('total');
-            $table->foreignId('id_sesion')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas_sesiones');
+            $table->foreignId('id_movimiento')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas_movimientos');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
