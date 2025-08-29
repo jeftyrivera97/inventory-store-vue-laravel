@@ -14,14 +14,14 @@ class TipoFacturasSeeder extends Seeder
     public function run(): void
     {
         
-         DB::table('tipos_facturas')->insert([
+         DB::table('tipos_comprobantes')->insert([
             'descripcion' => 'Contado',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now()   
         ]);
          
-         DB::table('tipos_facturas')->insert([
+         DB::table('tipos_comprobantes')->insert([
             'descripcion' => 'Credito',
             'id_estado' => '1',
             'created_at' => now(),

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('facturas_pagos', function (Blueprint $table) {
+        Schema::create('comprobantes_pagos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_factura')->nullable()->nullOnDelete()->constrained()->references('id')->on('facturas');
+            $table->foreignId('id_comprobante')->nullable()->nullOnDelete()->constrained()->references('id')->on('comprobantes');
             $table->foreignId('id_metodo_pago')->nullable()->nullOnDelete()->constrained()->references('id')->on('metodos_pagos');
             $table->dateTimeTz('fecha_hora');
             $table->string('referencia')->nullable();
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('facturas_pagos');
+        Schema::dropIfExists('comprobantes_pagos');
     }
 };

@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ventas', function (Blueprint $table) {
+        Schema::create('comprobantes_detalles', function (Blueprint $table) {
             $table->id();
-            $table->dateTimeTz('fecha');
-            $table->double('total');
-            $table->foreignId('id_movimiento')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas_movimientos');
+            $table->double('linea');
             $table->foreignId('id_comprobante')->nullable()->nullOnDelete()->constrained()->references('id')->on('comprobantes');
-            $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
+            $table->foreignId('id_producto')->nullable()->nullOnDelete()->constrained()->references('id')->on('productos');
+            $table->double('cantidad');
+            $table->double('precio');
+            $table->double('total_linea');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
             $table->softDeletes();
+
         });
     }
 
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cajas_ventas');
+        Schema::dropIfExists('comprobante_detalles');
     }
 };

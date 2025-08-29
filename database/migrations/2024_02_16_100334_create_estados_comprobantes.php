@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('estados_facturas', function (Blueprint $table) {
+        Schema::create('estados_comprobantes', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
             $table->softDeletes();
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('estados_facturas');
+        Schema::dropIfExists('estados_comprobantes');
     }
 };

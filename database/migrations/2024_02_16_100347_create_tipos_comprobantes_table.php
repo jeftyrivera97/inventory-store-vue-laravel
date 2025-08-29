@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipos_facturas', function (Blueprint $table) {
+        Schema::create('tipos_comprobantes', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipos_facturas');
+        Schema::dropIfExists('tipos_comprobantes');
     }
 };

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('facturas', function (Blueprint $table) {
+        Schema::create('comprobantes', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo_factura');
+            $table->string('codigo_comprobante');
             $table->date('fecha');
             $table->dateTimeTz('fecha_hora');
             $table->date('fecha_vencimiento');
@@ -27,10 +27,9 @@ return new class extends Migration
             $table->double('descuentos')->nullable();
             $table->double('subtotal')->nullable();
             $table->double('total')->nullable();
-            $table->foreignId('id_folio')->nullable()->nullOnDelete()->constrained()->references('id')->on('folios');
-            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_facturas');
-            $table->foreignId('id_tipo_factura')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipos_facturas');
-            $table->foreignId('id_estado_factura')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados_facturas');
+            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_comprobantes');
+            $table->foreignId('id_tipo_comprobante')->nullable()->nullOnDelete()->constrained()->references('id')->on('tipos_comprobantes');
+            $table->foreignId('id_estado_comprobante')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados_comprobantes');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);

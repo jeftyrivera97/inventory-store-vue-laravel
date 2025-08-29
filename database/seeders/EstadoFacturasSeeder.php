@@ -14,13 +14,13 @@ class EstadoFacturasSeeder extends Seeder
      */
     public function run(): void
     {
-         DB::table('estados_facturas')->insert([
+         DB::table('estados_comprobantes')->insert([
             'descripcion' => 'Anulada',
         ]);
-        DB::table('estados_facturas')->insert([
+        DB::table('estados_comprobantes')->insert([
             'descripcion' => 'Registrada',
         ]);
-         DB::table('estados_facturas')->insert([
+         DB::table('estados_comprobantes')->insert([
             'descripcion' => 'Pagada',
         ]);
     }

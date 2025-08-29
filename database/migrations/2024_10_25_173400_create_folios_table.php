@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('codigo_folio');
             $table->string('descripcion')->nullable();
+            $table->date('fecha_limite');
             $table->double('inicio');
             $table->double('final');
             $table->double('actual');
