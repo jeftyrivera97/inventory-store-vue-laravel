@@ -97,6 +97,8 @@ class ProductoController extends Controller
         }
 
         try {
+            // Log de los datos recibidos para debug
+            Log::info('Datos recibidos para crear producto:', $request->all());
 
             $codigo = $request->codigo_producto;
             if (Producto::where('codigo_producto', $codigo)->exists()) {
@@ -107,6 +109,12 @@ class ProductoController extends Controller
             $registro = now();
             $impuestoSeleccionado = $request->id_impuesto;
             $tipoImpuesto = Impuesto::find($impuestoSeleccionado);
+            
+            if (!$tipoImpuesto) {
+                Log::error('Impuesto no encontrado:', ['id_impuesto' => $impuestoSeleccionado]);
+                return redirect()->route('producto.index')->with('error', 'Error: Impuesto no válido');
+            }
+            
             $id_impuesto = $tipoImpuesto->id;
             $valorImpuesto = $tipoImpuesto->valor;
             $precioVenta = $request->precio_venta;
@@ -145,11 +153,18 @@ class ProductoController extends Controller
             $stock = $request->stock;
             $valor = $stock * $precioVenta;
 
+            // Log de los datos calculados
+            Log::info('Datos calculados para crear producto:', [
+                'valor' => $valor,
+                'gravado15' => $gravado15 ?? 0,
+                'gravado18' => $gravado18 ?? 0,
+                'impuesto15' => $impuesto15 ?? 0,
+                'impuesto18' => $impuesto18 ?? 0,
+                'exento' => $exento ?? 0,
+                'exonerado' => $exonerado ?? 0
+            ]);
 
-
-
-
-            Producto::create([
+            $producto = Producto::create([
                 'codigo_producto' => $request->codigo_producto,
                 'descripcion' => $request->descripcion,
                 'id_categoria' => $request->id_categoria,
@@ -169,11 +184,13 @@ class ProductoController extends Controller
                 'costo' => $request->costo,
                 'precio_venta' => $request->precio_venta,
                 'precio_web' => $request->precio_web,
-                'valor' => $request->valor,
-                'id_estado_web' => 1,
+                'valor' => number_format((float)$valor, 2, '.', ''),
+                'id_estado_online' => 1,
                 'id_estado' => 1,
                 'id_usuario' =>  $id_usuario,
             ]);
+
+            Log::info('Producto creado exitosamente:', ['id' => $producto->id]);
 
             return redirect()->route('producto.index')->with('message', 'Producto agregado con exito');
         } catch (\Throwable $th) {
@@ -195,7 +212,7 @@ class ProductoController extends Controller
         $impuestos = Impuesto::where('id_estado', 1)->get();
         $categorias = ProductoCategoria::where('id_estado', 1)->get();
         $proveedores = Proveedor::where('id_estado', 1)->get();
-        $data = Producto::findOrFail($id);
+        $data = Producto::with(['proveedor', 'categoria', 'impuesto'])->findOrFail($id);
 
         return Inertia::render('producto/edit', compact('impuestos', 'categorias', 'proveedores', 'data'));
     }
@@ -217,8 +234,12 @@ class ProductoController extends Controller
             $id_impuesto = $tipoImpuesto->id;
             $valorImpuesto = $tipoImpuesto->valor;
             $precioVenta = $request->precio_venta;
-            $categorias = $request->id_categoria;
-            $id_categoria = $categorias["id"];
+            
+            // Simplificar la lógica de categoría
+            $id_categoria = $request->id_categoria;
+            if (is_array($id_categoria) && isset($id_categoria['id'])) {
+                $id_categoria = $id_categoria['id'];
+            }
 
             if ($id_impuesto == 1) {
                 $gravado15 = $precioVenta / $valorImpuesto;
@@ -280,8 +301,8 @@ class ProductoController extends Controller
                 'costo' => $request->costo,
                 'precio_venta' => $request->precio_venta,
                 'precio_web' => $request->precio_web,
-                'valor' => $request->valor,
-                'id_estado_web' => 1,
+                'valor' => number_format((float)$valor, 2, '.', ''),
+                'id_estado_online' => 1,
                 'id_estado' => 1,
                 'id_usuario' =>  $id_usuario,
             ]);

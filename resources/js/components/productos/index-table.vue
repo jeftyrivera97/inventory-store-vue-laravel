@@ -1,10 +1,8 @@
-<script setup>
-import { Link } from '@inertiajs/vue3'
+<script setup lang="ts">
+
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from '@/components/ui/table'
 import DeleteOption from '@/components/shared/delete-button.vue'
 import EditOption from '@/components/shared/edit-button.vue'
-import { reactive } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
 import TablePagination from '@/components/shared/pagination.vue'
 
 const props = defineProps({
@@ -41,11 +39,15 @@ const editRoute = "producto.edit"
                         {{ item.codigo_producto }}
                     </TableCell>
                     <TableCell>{{ item.descripcion }}</TableCell>
-                    <TableCell v-if="!item.id_categoria.length">CATEGORIA NO EXISTE</TableCell>
-                    <TableCell v-for="data in item.id_categoria">{{ data.descripcion }}</TableCell>
+                    <TableCell>
+                        <span v-if="!item.categoria">CATEGORIA NO EXISTE</span>
+                        <span v-else>{{ item.categoria.descripcion }}</span>
+                    </TableCell>
                     <TableCell>{{ item.color }}</TableCell>
-                    <TableCell v-if="!item.id_proveedor.length">PROVEEDOR NO EXISTE</TableCell>
-                    <TableCell v-for="data in item.id_proveedor">{{ data.descripcion }}</TableCell>
+                    <TableCell>
+                        <span v-if="!item.proveedor">PROVEEDOR NO EXISTE</span>
+                        <span v-else>{{ item.proveedor.descripcion }}</span>
+                    </TableCell>
                     <TableCell>{{ item.size }}</TableCell>
                     <TableCell>{{ item.stock }}</TableCell>
                     <TableCell>{{ item.marca }}</TableCell>

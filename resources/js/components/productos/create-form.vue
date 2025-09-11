@@ -4,17 +4,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { reactive } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
-import { Plus } from 'lucide-vue-next';
+import { router } from '@inertiajs/vue3'
 import { CircleArrowLeft } from 'lucide-vue-next';
 import { Save } from 'lucide-vue-next';
 import { Link } from '@inertiajs/vue3'
 import { Pen } from 'lucide-vue-next';
-import { useForm } from '@inertiajs/vue3'
-import $ from 'jquery'
+
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, } from '@/components/ui/select'
 
-const props = defineProps({
+defineProps({
     impuestos: { type: Object, required: true },
     categorias: { type: Object, required: true },
     proveedores: { type: Object, required: true },
@@ -22,70 +20,80 @@ const props = defineProps({
 })
 
 const form = reactive({
-    codigo_producto: null,
-    descripcion: null,
-    id_categoria: null,
-    marca: null,
-    size: null,
-    color: null,
-    id_proveedor: null,
-    peso: null,
-    stock: null,
-    id_impuesto: null,
+    codigo_producto: '',
+    descripcion: '',
+    id_categoria: null as any,
+    marca: '',
+    size: '',
+    color: '',
+    id_proveedor: null as number | null,
+    peso: 0,
+    stock: 0,
+    id_impuesto: null as number | null,
     gravado15: 1,
     gravado18: 1,
     impuesto15: 1,
     impuesto18: 1,
-    exento: null,
-    exonerado: null,
-    costo: null,
-    precio_venta: null,
-    precio_web: null,
-    valor: 300,
-    id_estado_web: 1,
+    exento: 0,
+    exonerado: 0,
+    costo: 0,
+    precio_venta: 0,
+    precio_web: 0,
+    valor: 0,
+    id_estado_online: 1,
     id_estado: 1,
     id_usuario: 1,
     id_empresa: 1,
     registro: "2025-03-31 16:22:17",
     updated: "2025-03-31 16:22:17",
-
 })
 
-function generarCodigo(event) {
-
-
-    if (form.descripcion === undefined || form.descripcion == "" || form.descripcion === null) {
+function generarCodigo() {
+    if (!form.descripcion || form.descripcion.trim() === '') {
         alert("Debe Ingresar una Descripcion")
+        return
     }
-    else if (form.id_categoria === undefined || form.id_categoria == "" || form.id_categoria === null) {
+    if (!form.id_categoria) {
         alert("Debe Seleccionar una Categoria")
+        return
     }
-    else if (form.marca === undefined || form.marca == "" || form.marca === null) {
+    if (!form.marca || form.marca.trim() === '') {
         alert("Debe Ingresar una Marca")
-    }
-    else {
-        var descripcion = form.descripcion;
-        var marca = form.marca;
-        var categoria = form.id_categoria.descripcion;
-
-        const de = descripcion.slice(0, 2);
-        const ma = marca.slice(0, 2);
-        const ca = categoria.slice(0, 2);
-        const x = de + ca + ma;
-        let result = x.toUpperCase();
-        let num = Math.floor((Math.random() * 999) + 100);
-        var codigo = result + num;
-        document.getElementById("codigo_producto").value = codigo;
-        form.codigo_producto = codigo;
+        return
     }
 
+    const descripcion = form.descripcion;
+    const marca = form.marca;
+    const categoria = form.id_categoria.descripcion;
+
+    const de = descripcion.slice(0, 2);
+    const ma = marca.slice(0, 2);
+    const ca = categoria.slice(0, 2);
+    const x = de + ca + ma;
+    const result = x.toUpperCase();
+    const num = Math.floor((Math.random() * 999) + 100);
+    const codigo = result + num;
+    
+    const element = document.getElementById("codigo_producto") as HTMLInputElement;
+    if (element) {
+        element.value = codigo;
+    }
+    form.codigo_producto = codigo;
 }
 
 function submit() {
+    // Calcular el valor correctamente
+    const stock = form.stock || 0;
+    const precio = form.precio_venta || 0;
+    form.valor = stock * precio;
 
-    var id_categoria = form.id_categoria.id;
-    form.id_categoria = id_categoria;
-    router.post('/producto', form)
+    // Enviar solo el ID de la categoría
+    const formData = {
+        ...form,
+        id_categoria: form.id_categoria?.id || form.id_categoria
+    };
+    
+    router.post('/producto', formData)
 }
 
 </script>
@@ -110,10 +118,9 @@ function submit() {
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Categorias</SelectLabel>
-                                <SelectItem v-for="option in categorias" :value="option">
+                                <SelectItem v-for="option in categorias" :key="option.id" :value="option">
                                     {{ option.descripcion }}
                                 </SelectItem>
-
                             </SelectGroup>
                         </SelectContent>
                     </Select>
@@ -161,10 +168,9 @@ function submit() {
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Proveedores</SelectLabel>
-                                <SelectItem v-for="option in proveedores" :value="option.id">
+                                <SelectItem v-for="option in proveedores" :key="option.id" :value="option.id">
                                     {{ option.descripcion }}
                                 </SelectItem>
-
                             </SelectGroup>
                         </SelectContent>
                     </Select>
@@ -180,10 +186,9 @@ function submit() {
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Impuestos</SelectLabel>
-                                <SelectItem v-for="option in impuestos" :value="option.id">
+                                <SelectItem v-for="option in impuestos" :key="option.id" :value="option.id">
                                     {{ option.descripcion }}
                                 </SelectItem>
-
                             </SelectGroup>
                         </SelectContent>
                     </Select>

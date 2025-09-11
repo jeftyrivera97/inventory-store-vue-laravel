@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('cajas_sesiones', function (Blueprint $table) {
             $table->id();
+            $table->date('fecha');
+            $table->dateTimeTz('fecha_apertura');
+            $table->dateTimeTz('fecha_cierre')->nullable();
             $table->foreignId('id_caja')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas');
             $table->double('caja_efectivo_inicial');
             $table->double('caja_efectivo_final')->nullable();
             $table->double('diferencia')->nullable();
-            $table->dateTimeTz('fecha_apertura');
-            $table->dateTimeTz('fecha_cierre')->nullable();
             $table->double('venta_efectivo');
             $table->double('venta_tarjeta');
             $table->double('venta_transferencia');

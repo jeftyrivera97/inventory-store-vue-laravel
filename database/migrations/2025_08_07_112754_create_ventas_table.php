@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
             $table->dateTimeTz('fecha');
+            $table->string('codigo_venta');
             $table->double('total');
             $table->foreignId('id_movimiento')->nullable()->nullOnDelete()->constrained()->references('id')->on('cajas_movimientos');
             $table->foreignId('id_comprobante')->nullable()->nullOnDelete()->constrained()->references('id')->on('comprobantes');

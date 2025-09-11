@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('planillas', function (Blueprint $table) {
             $table->id();
-            $table->string('descripcion');
+            $table->string('codigo_planilla');
             $table->date('fecha');
+            $table->string('descripcion');
             $table->foreignId('id_empleado')->nullable()->nullOnDelete()->constrained()->references('id')->on('empleados');
             $table->double('total');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');

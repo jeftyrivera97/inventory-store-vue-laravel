@@ -33,4 +33,18 @@ export default defineConfig({
             plugins: [tailwindcss, autoprefixer],
         },
     },
+    build: {
+        manifest: 'manifest.json',  // Generar manifest en la raíz de build, no en .vite/
+        outDir: 'public/build',
+        rollupOptions: {
+            input: 'resources/js/app.ts'
+        }
+    },
+    server: {
+        cors: true,
+        host: true,
+        hmr: {
+            host: 'localhost'
+        }
+    },
 });
