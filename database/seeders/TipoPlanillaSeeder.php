@@ -6,50 +6,50 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class TipoIngresoSeeder extends Seeder
+class TipoPlanillaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos Operacionales', // provienen de la actividad principal
+        DB::table('tipos_planillas')->insert([
+            'descripcion' => 'Salarios a empleados directos',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos No Operacionales', // fuera de la actividad principal, ej: venta de activos
+        DB::table('tipos_planillas')->insert([
+            'descripcion' => 'Salarios a empleados indirectos',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos Extraordinarios', // esporádicos, excepcionales
+        DB::table('tipos_planillas')->insert([
+            'descripcion' => 'Pagos a contratistas/servicios profesionales',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos Financieros', // intereses, dividendos
+        DB::table('tipos_planillas')->insert([
+            'descripcion' => 'Pagos de horas extras',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos por Inversiones', // venta de acciones, bonos, etc.
+        DB::table('tipos_planillas')->insert([
+            'descripcion' => 'Pagos de comisiones',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-         DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Pasivos', // aumento de deudas o préstamos
+        DB::table('tipos_planillas')->insert([
+            'descripcion' => 'Pagos de beneficios y aguinaldos',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),

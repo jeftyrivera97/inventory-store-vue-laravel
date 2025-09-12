@@ -23,16 +23,25 @@ class DatabaseSeeder extends Seeder
 
             ImpuestoSeeder::class,
             EmpresaSeeder::class,
+            AreasEmpleadoSeeder::class,
 
             TipoFacturasSeeder::class,
             TipoOperacionesSeeder::class,
             TipoIngresoSeeder::class,
+            TipoGastoSeeder::class,
+            TipoCompraSeeder::class,
+            TipoPlanillaSeeder::class,
 
+
+            MediosMovimientosSeeder::class,
             CategoriaMovimientoSeeder::class,
             CategoriaIngresoSeeder::class,
-            MediosMovimientosSeeder::class,
             CategoriaFacturasSeeder::class,
             MetodosPagosSeeder::class,
+            CategoriaGastoSeeder::class,
+            CategoriaCompraSeeder::class,
+            CategoriaEmpleadoSeeder::class,
+            CategoriaPlanillaSeeder::class,
 
             ClienteSeeder::class,
             CajaSeeder::class,

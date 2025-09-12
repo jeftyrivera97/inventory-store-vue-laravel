@@ -6,50 +6,50 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class TipoIngresoSeeder extends Seeder
+class TipoCompraSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos Operacionales', // provienen de la actividad principal
+        DB::table('tipos_compras')->insert([ //id 1
+            'descripcion' => 'Compras Operacionales',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos No Operacionales', // fuera de la actividad principal, ej: venta de activos
+        DB::table('tipos_compras')->insert([ //id 2
+            'descripcion' => 'Compras Directas',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos Extraordinarios', // esporádicos, excepcionales
+        DB::table('tipos_compras')->insert([ //id 3
+            'descripcion' => 'Compras Indirectas',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos Financieros', // intereses, dividendos
+        DB::table('tipos_compras')->insert([    //id 4
+            'descripcion' => 'Compras de Materia Prima',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Ingresos por Inversiones', // venta de acciones, bonos, etc.
+        DB::table('tipos_compras')->insert([ //id 5
+            'descripcion' => 'Compras de Suministros',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-         DB::table('tipos_ingresos')->insert([
-            'descripcion' => 'Pasivos', // aumento de deudas o préstamos
+        DB::table('tipos_compras')->insert([ //id 6
+            'descripcion' => 'Compras de Activos Fijos',
             'id_estado' => '1',
             'created_at' => now(),
             'updated_at' => now(),
