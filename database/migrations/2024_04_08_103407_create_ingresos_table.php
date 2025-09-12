@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ingresos', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo_gasto');
+            $table->string('codigo_ingreso')->unique();
             $table->date('fecha');
             $table->string('descripcion');
             $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_ingresos');
