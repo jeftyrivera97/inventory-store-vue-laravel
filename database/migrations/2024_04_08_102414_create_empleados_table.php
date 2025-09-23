@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('empleados', function (Blueprint $table) {
             $table->id();
             $table->string('codigo_empleado');
-            $table->string('descripcion');
+            $table->string('nombre');
+            $table->string('apellido');
             $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_empleados');
             $table->foreignId('id_area')->nullable()->nullOnDelete()->constrained()->references('id')->on('areas_empleados');
             $table->string('telefono');

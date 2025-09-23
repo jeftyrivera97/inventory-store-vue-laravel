@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('codigo_planilla');
             $table->date('fecha');
             $table->string('descripcion');
+            $table->foreignId('id_categoria')->nullable()->nullOnDelete()->constrained()->references('id')->on('categorias_planillas');
             $table->foreignId('id_empleado')->nullable()->nullOnDelete()->constrained()->references('id')->on('empleados');
             $table->double('total');
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');

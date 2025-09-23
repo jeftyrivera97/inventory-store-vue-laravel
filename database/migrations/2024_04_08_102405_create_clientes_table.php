@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
             $table->string('codigo_cliente');
-            $table->string('descripcion');
+            $table->string('razon_social')->nullable();
+            $table->string('nombre')->nullable();
+            $table->string('apellido')->nullable();
             $table->string('direccion')->nullable();
             $table->string('telefono')->nullable();
+            $table->string('correo')->nullable();
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);

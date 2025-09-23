@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('categoria');
             $table->string('contacto');
             $table->string('telefono')->nullable();
+            $table->string('correo')->nullable();
             $table->foreignId('id_estado')->nullable()->nullOnDelete()->constrained()->references('id')->on('estados');
             $table->foreignId('id_usuario')->nullable()->nullOnDelete()->constrained()->references('id')->on('users');
             $table->timestamps(precision: 0);
