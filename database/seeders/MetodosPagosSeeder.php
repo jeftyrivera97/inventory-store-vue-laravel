@@ -18,7 +18,7 @@ class MetodosPagosSeeder extends Seeder
         DB::table('metodos_pagos')->insert([
             'descripcion' => 'Credito',
             'id_tipo_operacion' => '2',
-            'id_estado' => '1',
+            'id_estado' => '2',
             'id_usuario' => '1',
             'created_at' => now(),
             'updated_at' => now(),
